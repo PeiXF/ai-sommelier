@@ -1,0 +1,2634 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+    <meta name="theme-color" content="#faf7ef">
+    <meta name="description" content="Four short questions, up to three friendly wine matches. A bilingual Team Athens prototype with fictional wines and prices.">
+    <title>AI Sommelier — Find your wine · Team Athens Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+/* Core theme and component styles recovered from the published page. */
+*,:before,:after {
+  box-sizing:border-box;
+  border:0 solid;
+}
+html {
+  line-height:1.5;
+  -webkit-text-size-adjust:100%;
+}
+body {
+  margin:0;
+  background:var(--background);
+  color:var(--foreground);
+  font:16px/1.5 var(--font-sans);
+}
+button,input {
+  font:inherit;
+  letter-spacing:inherit;
+  color:inherit;
+}
+button {
+  cursor:pointer;
+  background:transparent;
+}
+button:disabled {
+  cursor:not-allowed;
+  opacity:.5;
+  pointer-events:none;
+}
+button {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:background-color .15s,border-color .15s,color .15s;
+}
+button svg {
+  width:16px;
+  height:16px;
+  flex-shrink:0;
+  pointer-events:none;
+}
+svg {
+  display:block;
+  vertical-align:middle;
+}
+p {
+  margin:0;
+}
+h1,h2,h3 {
+  font-weight:inherit;
+  margin:0;
+}
+h1:focus {
+  outline:none;
+}
+.ghost {
+  min-height:48px;
+  border-radius:6px;
+  padding:12px 16px;
+  font-size:16px;
+}
+.ghost:hover {
+  background:var(--accent);
+}
+.outline {
+  border:1px solid var(--border);
+  border-radius:6px;
+  min-height:48px;
+  padding:12px 16px;
+}
+.outline:hover {
+  background:var(--accent);
+}
+.text-link {
+  min-height:48px;
+  padding:12px 16px;
+  color:var(--primary);
+}
+.text-link:hover {
+  text-decoration:underline;
+}
+.chip-button {
+  padding:12px 16px;
+}
+.w-full {
+  width:100%;
+}
+.text-primary {
+  color:var(--primary);
+}
+.text-center {
+  text-align:center;
+}
+.mb-7 {
+  margin-bottom:28px;
+}
+.mt-8 {
+  margin-top:32px;
+}
+.flex {
+  display:flex;
+}
+.items-center {
+  align-items:center;
+}
+.justify-between {
+  justify-content:space-between;
+}
+.justify-center {
+  justify-content:center;
+}
+.gap-2 {
+  gap:8px;
+}
+.gap-3 {
+  gap:12px;
+}
+.sr-only {
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+:root {
+  --radius:1rem;
+  --background:oklch(97.2% .013 82);
+  --foreground:oklch(27.5% .01 48);
+  --card:oklch(100% 0 0);
+  --card-foreground:var(--foreground);
+  --popover:oklch(100% 0 0);
+  --popover-foreground:oklch(12.9% .042 264.695);
+  --primary:oklch(36.3% .107 12);
+  --primary-hover:oklch(31.1% .092 13);
+  --primary-foreground:oklch(100% 0 0);
+  --secondary:oklch(94.8% .024 77);
+  --secondary-foreground:oklch(20.8% .042 265.755);
+  --muted:var(--secondary);
+  --muted-foreground:oklch(51.4% .019 60);
+  --accent:oklch(94% .026 67);
+  --accent-foreground:oklch(20.8% .042 265.755);
+  --destructive:oklch(49.9% .14 23);
+  --destructive-foreground:oklch(98.4% .003 247.858);
+  --border:oklch(90.5% .029 80);
+  --input:var(--border);
+  --ring:var(--primary);
+  --gold:oklch(68.3% .088 77);
+  --success:oklch(48.6% .065 153);
+  --wine-white:oklch(76% .12 88);
+  --wine-red:var(--primary);
+  --wine-rose:oklch(70% .11 20);
+  --wine-sparkling:oklch(59% .07 150);
+  --shadow-soft:0 6px 24px oklch(30% .025 45/.035);
+  --illustration-tint:oklch(92.7% .029 46);
+  --font-sans:"Inter",system-ui,sans-serif;
+  --font-display:"Cormorant Garamond",Georgia,serif;
+}
+.app-shell {
+  max-width:480px;
+  min-height:100svh;
+  padding:max(24px, env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom));
+  flex-direction:column;
+  margin:0 auto;
+  display:flex
+}
+.app-header {
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  min-height:48px;
+  display:flex
+}
+.brand-lockup {
+  align-items:center;
+  gap:10px;
+  display:flex
+}
+.brand-lockup strong {
+  font-family:var(--font-display);
+  font-size:25px;
+  font-weight:600;
+  line-height:1
+}
+.brand-lockup small {
+  color:var(--muted-foreground);
+  margin-top:5px;
+  font-size:10px;
+  display:block
+}
+.brand-lockup svg {
+  color:var(--primary);
+  stroke-width:1.3px;
+  width:23px;
+  height:30px
+}
+.language-toggle {
+  color:var(--muted-foreground);
+  align-items:center;
+  font-size:12px;
+  display:flex
+}
+.language-toggle button {
+  min-width:32px;
+  min-height:48px;
+  padding:0 4px;
+  font-size:12px
+}
+.language-toggle button[aria-pressed=true] {
+  color:var(--primary);
+  font-weight:600
+}
+.welcome {
+  text-align:center;
+  flex-direction:column;
+  flex:1;
+  align-items:center;
+  padding-top:32px;
+  display:flex
+}
+.restaurant-line {
+  color:var(--muted-foreground);
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  font-size:12px;
+  display:flex
+}
+.demo-tag {
+  border:1px solid var(--border);
+  color:var(--muted-foreground);
+  border-radius:4px;
+  padding:3px 8px;
+  font-size:10px;
+  font-weight:500;
+  line-height:1.4
+}
+.wine-illustration {
+  place-items:center;
+  width:230px;
+  height:226px;
+  margin:28px 0 13px;
+  display:grid;
+  position:relative
+}
+.wine-illustration:before {
+  content:"";
+  background:var(--illustration-tint);
+  opacity:.65;
+  border-radius:50%;
+  width:194px;
+  height:194px;
+  position:absolute
+}
+.wine-illustration>svg {
+  color:var(--primary);
+  stroke-width:.8px;
+  width:100px;
+  height:152px;
+  position:relative;
+  transform:rotate(-9deg)
+}
+.wine-illustration .illustration-leaf {
+  width:58px;
+  height:76px;
+  color:var(--gold);
+  stroke-width:.8px;
+  position:absolute;
+  bottom:27px;
+  right:38px;
+  transform:rotate(23deg)
+}
+.wine-illustration .illustration-spark {
+  width:24px;
+  height:24px;
+  color:var(--gold);
+  stroke-width:1px;
+  position:absolute;
+  top:31px;
+  right:37px
+}
+h1 {
+  font-family:var(--font-display);
+  white-space:pre-line;
+  margin:0;
+  font-size:38px;
+  font-weight:500;
+  line-height:1.1
+}
+.welcome h1 {
+  color:var(--primary);
+  font-size:46px
+}
+.welcome-copy {
+  color:var(--muted-foreground);
+  max-width:360px;
+  margin:22px 0 28px;
+  line-height:1.75
+}
+.welcome-actions {
+  width:100%;
+  margin-top:auto;
+  padding-top:28px
+}
+.sommelier-button {
+  background:var(--primary);
+  color:var(--primary-foreground);
+  min-height:54px;
+  box-shadow:var(--shadow-soft);
+  border-radius:12px;
+  justify-content:center;
+  width:100%;
+  font-size:16px
+}
+.sommelier-button:hover {
+  background:var(--primary-hover)
+}
+.responsible {
+  color:var(--muted-foreground);
+  max-width:310px;
+  margin:19px auto 0;
+  font-size:11px;
+  line-height:1.7
+}
+.app-footer {
+  text-align:center;
+  color:var(--muted-foreground);
+  margin-top:30px;
+  font-size:10px;
+  line-height:1.8
+}
+.footer-links {
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  display:flex
+}
+.footer-links button {
+  min-height:48px;
+  padding:0 8px;
+  font-size:11px
+}
+.question-screen {
+  flex:1;
+  padding-top:27px
+}
+.progress-row {
+  text-transform:uppercase;
+  letter-spacing:0;
+  color:var(--muted-foreground);
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:28px;
+  font-size:11px;
+  display:flex
+}
+.progress-dots {
+  gap:7px;
+  display:flex
+}
+.progress-dots span {
+  background:var(--border);
+  border-radius:3px;
+  width:22px;
+  height:3px
+}
+.progress-dots .complete {
+  background:var(--primary)
+}
+.screen-hint {
+  color:var(--muted-foreground);
+  margin:12px 0 26px;
+  line-height:1.6
+}
+.colour-picker {
+  margin:24px 0 20px
+}
+.colour-picker>p {
+  color:var(--muted-foreground);
+  margin-bottom:10px;
+  font-size:12px
+}
+.chip-button {
+  border:1px solid var(--border);
+  color:var(--muted-foreground);
+  background:0 0;
+  border-radius:24px;
+  min-height:48px;
+  font-size:13px;
+  font-weight:400
+}
+.chip-button:hover,.chip-button[aria-pressed=true] {
+  background:var(--accent);
+  border-color:var(--primary);
+  color:var(--primary)
+}
+.colour-chips {
+  flex-wrap:wrap;
+  gap:6px;
+  display:flex
+}
+.colour-chips .chip-button {
+  padding:7px 10px;
+  font-size:11px
+}
+.choice-list {
+  flex-direction:column;
+  gap:10px;
+  display:flex
+}
+.choice-button {
+  text-align:left;
+  background:var(--card);
+  width:100%;
+  height:auto;
+  color:var(--foreground);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-soft);
+  white-space:normal;
+  border-radius:16px;
+  justify-content:flex-start;
+  gap:15px;
+  min-height:78px;
+  padding:16px 18px;
+  display:flex
+}
+.choice-button:hover,.choice-button[aria-pressed=true] {
+  border-color:var(--primary);
+  background:var(--accent)
+}
+.choice-button .choice-icon {
+  width:36px;
+  height:40px;
+  color:var(--primary);
+  flex-shrink:0;
+  place-items:center;
+  display:grid
+}
+.choice-button .choice-icon svg {
+  stroke-width:1.3px;
+  width:25px;
+  height:25px
+}
+.choice-button strong {
+  font-size:16px;
+  font-weight:500;
+  line-height:1.45;
+  display:block
+}
+.choice-button small {
+  color:var(--muted-foreground);
+  margin-top:3px;
+  font-size:16px;
+  font-weight:400;
+  line-height:1.6;
+  display:block
+}
+.choice-chevron {
+  color:var(--gold);
+  flex-shrink:0;
+  margin-left:auto
+}
+.food-options {
+  flex-wrap:wrap;
+  gap:10px;
+  display:flex
+}
+.food-options .chip-button {
+  padding:14px 17px;
+  font-size:14px
+}
+.bottom-actions {
+  flex-direction:column;
+  gap:8px;
+  margin-top:35px;
+  display:flex
+}
+.food-hint {
+  color:var(--primary);
+  min-height:22px;
+  margin-top:16px;
+  font-size:13px
+}
+.serving-options .choice-button {
+  min-height:124px
+}
+.results-screen {
+  padding-top:32px
+}
+.answer-chips {
+  flex-wrap:wrap;
+  gap:7px;
+  margin:22px 0 26px;
+  display:flex
+}
+.answer-chips .chip-button {
+  min-height:36px;
+  padding:7px 12px;
+  font-size:11px
+}
+.wine-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-soft);
+  border-radius:16px;
+  margin-bottom:16px;
+  padding:23px
+}
+.wine-card-best {
+  border:1.5px solid var(--primary)
+}
+.best-badge {
+  color:var(--primary);
+  background:var(--secondary);
+  border-radius:5px;
+  align-items:center;
+  gap:6px;
+  padding:7px 10px;
+  font-size:11px;
+  font-weight:600;
+  display:inline-flex
+}
+.wine-card h2 {
+  font-family:var(--font-display);
+  margin:21px 0 8px;
+  font-size:29px;
+  font-weight:600;
+  line-height:1.1
+}
+.producer {
+  margin:0 0 4px;
+  font-size:13px
+}
+.region {
+  color:var(--muted-foreground);
+  margin:0;
+  font-size:11px
+}
+.wine-style {
+  color:var(--muted-foreground);
+  flex-wrap:wrap;
+  align-items:center;
+  gap:7px;
+  margin-top:18px;
+  font-size:11px;
+  display:flex
+}
+.colour-dot {
+  border-radius:50%;
+  flex-shrink:0;
+  width:8px;
+  height:8px;
+  display:inline-block
+}
+.colour-red {
+  background:var(--wine-red)
+}
+.colour-white {
+  background:var(--wine-white)
+}
+.colour-rose {
+  background:var(--wine-rose)
+}
+.colour-sparkling {
+  background:var(--wine-sparkling)
+}
+.wine-price {
+  font-size:23px;
+  font-family:var(--font-display);
+  color:var(--primary);
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:8px;
+  margin:18px 0;
+  font-weight:600;
+  display:flex
+}
+.wine-price span,.wine-price small {
+  font-family:var(--font-sans);
+  color:var(--muted-foreground);
+  font-size:11px;
+  font-weight:400
+}
+.wine-price .budget-badge {
+  border:1px solid currentColor;
+  border-radius:999px;
+  color:var(--primary);
+  font-weight:600;
+  padding:2px 8px
+}
+.wine-explanation {
+  border-top:1px solid var(--border);
+  padding-top:16px
+}
+.wine-explanation h3 {
+  color:var(--primary);
+  margin:0 0 6px;
+  font-size:11px;
+  font-weight:600
+}
+.wine-explanation p {
+  color:var(--muted-foreground);
+  margin:0;
+  font-size:16px;
+  line-height:1.7
+}
+.flavour-notes {
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:16px;
+  display:flex
+}
+.flavour-notes span {
+  background:var(--muted);
+  color:var(--muted-foreground);
+  border-radius:4px;
+  padding:5px 8px;
+  font-size:10px
+}
+.alternatives-title {
+  color:var(--muted-foreground);
+  margin:27px 0 14px;
+  font-size:12px;
+  font-weight:500
+}
+.fallback-note {
+  color:var(--primary);
+  border-top:1px solid var(--border);
+  padding:15px 0;
+  font-size:13px;
+  line-height:1.6
+}
+.feedback {
+  text-align:center;
+  border-top:1px solid var(--border);
+  margin-top:32px;
+  padding:25px 0
+}
+.feedback h2 {
+  font-family:var(--font-display);
+  margin:0 0 15px;
+  font-size:26px;
+  font-weight:500
+}
+.feedback-form {
+  text-align:left;
+  flex-direction:column;
+  gap:10px;
+  margin-top:20px;
+  display:flex
+}
+.feedback-form label {
+  color:var(--muted-foreground);
+  font-size:13px
+}
+input {
+  background:var(--card);
+  color:var(--foreground);
+  border:1px solid var(--border);
+  border-radius:8px;
+  width:100%;
+  min-height:48px;
+  padding:12px
+}
+.small-text {
+  color:var(--muted-foreground);
+  font-size:11px;
+  line-height:1.8
+}
+.modal-backdrop {
+  z-index:20;
+  background:oklch(20% .01 30/.4);
+  place-items:center;
+  padding:24px;
+  display:grid;
+  position:fixed;
+  inset:0
+}
+.modal {
+  background:var(--card);
+  border:1px solid var(--border);
+  max-width:400px;
+  box-shadow:var(--shadow-soft);
+  border-radius:16px;
+  padding:28px
+}
+.modal h2 {
+  font-family:var(--font-display);
+  margin:0;
+  font-size:30px
+}
+.modal p {
+  color:var(--muted-foreground);
+  line-height:1.7
+}
+button:focus-visible,input:focus-visible {
+  outline:2px solid var(--primary);
+  outline-offset:4px
+}
+.screen-enter {
+  animation:.25s both arrive
+}
+@keyframes arrive {
+  0% {
+    opacity:0;
+    transform:translateY(7px)
+  }
+  to {
+    opacity:1;
+    transform:translateY(0)
+  }
+}
+@media (width>=600px) {
+  .app-shell {
+    padding-top:40px;
+    padding-bottom:25px
+  }
+  .welcome {
+    padding-top:44px
+  }
+  .welcome-actions {
+    padding-top:40px
+  }
+  .app-shell:has(.welcome) {
+    min-height:min(930px,100svh)
+  }
+  .wine-illustration {
+    margin-top:42px
+  }
+}
+@media (width<=350px) {
+  .app-shell {
+    padding-left:16px;
+    padding-right:16px
+  }
+  .welcome h1 {
+    font-size:40px
+  }
+  .brand-lockup strong {
+    font-size:23px
+  }
+  .choice-button {
+    gap:9px;
+    padding:14px 12px
+  }
+  .wine-card {
+    padding:18px
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  *,:before,:after {
+    transition:none!important;
+    animation:none!important
+  }
+}
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <noscript>Please enable JavaScript to use the wine questionnaire.</noscript>
+    <script>
+// Recovered public demo content; all wines and prices are fictional.
+const I18N = {
+  "en": {
+    "brand": "AI Sommelier",
+    "team": "A Team Athens prototype",
+    "demo": "Demo",
+    "restaurant": "Demo Restaurant",
+    "welcomeTitle": "A little guidance.\nA lovely glass.",
+    "welcome": "Tell us what you like, and we’ll find the right wine from our list in under a minute.",
+    "responsible": "For guests of legal drinking age. Please enjoy responsibly.",
+    "start": "Start",
+    "chooseLanguage": "Choose your language / Sprache wählen",
+    "english": "English",
+    "german": "Deutsch",
+    "back": "Go back",
+    "language": "Change language",
+    "of": "of",
+    "question": "Question",
+    "tasteTitle": "What sounds good to you?",
+    "foodTitle": "What are you eating?",
+    "servingTitle": "How would you like to enjoy it?",
+    "budgetTitle": "What feels right for your budget?",
+    "tasteHint": "Go with whatever feels like you.",
+    "foodHint": "A little pairing makes a lovely difference.",
+    "servingHint": "Just for you, or something to share.",
+    "budgetHint": "A good match at a comfortable price.",
+    "colourLabel": "Colour preference",
+    "optional": "optional",
+    "noPreference": "No preference",
+    "colours": {
+      "red": "Red",
+      "white": "White",
+      "rose": "Rosé",
+      "sparkling": "Sparkling"
+    },
+    "tastes": {
+      "light-fresh": [
+        "Light & refreshing",
+        "Crisp, zesty, easy to sip"
+      ],
+      "fruity-easy": [
+        "Fruity & easy-going",
+        "Juicy, soft, no edges"
+      ],
+      "smooth-round": [
+        "Smooth & rounded",
+        "Gentle, balanced, comforting"
+      ],
+      "rich-bold": [
+        "Rich & bold",
+        "Full-bodied with real character"
+      ],
+      "sweet": [
+        "A little sweet",
+        "Sweet and dessert-friendly"
+      ],
+      "surprise": [
+        "Surprise me",
+        "We’ll pick something lovely"
+      ]
+    },
+    "foods": {
+      "fish": "Fish & seafood",
+      "poultry": "Chicken & light dishes",
+      "red-meat": "Red meat",
+      "vegetarian": "Vegetarian",
+      "pasta-pizza": "Pasta & pizza",
+      "cheese": "Cheese & starters",
+      "dessert": "Dessert"
+    },
+    "foodForms": {
+      "fish": "fish and seafood",
+      "poultry": "chicken and light dishes",
+      "red-meat": "red meat",
+      "vegetarian": "vegetarian dishes",
+      "pasta-pizza": "pasta and pizza",
+      "cheese": "cheese",
+      "dessert": "dessert"
+    },
+    "maxFood": "Pick up to two",
+    "continue": "Continue",
+    "skip": "Skip — I’ll decide later",
+    "glass": "A glass",
+    "bottle": "A bottle",
+    "glassSize": "0.2 l",
+    "bottleSize": "0.75 l · about 4 glasses",
+    "budgets": {
+      "glass": {
+        "low": "Up to €6",
+        "mid": "€6 – €9",
+        "high": "€9 and above",
+        "any": "No limit"
+      },
+      "bottle": {
+        "low": "Up to €30",
+        "mid": "€30 – €50",
+        "high": "€50 and above",
+        "any": "No limit"
+      }
+    },
+    "results": "Your matches",
+    "resultsHint": "A few lovely options, chosen for you.",
+    "best": "Best match",
+    "alternatives": "Also worth trying",
+    "why": "Why this wine",
+    "perGlass": "per glass",
+    "perBottle": "per bottle",
+    "bottleOnly": "bottle only",
+    "sweetness": {
+      "dry": "Dry",
+      "off-dry": "A touch sweet",
+      "sweet": "Sweet"
+    },
+    "bodies": {
+      "light": "Light body",
+      "medium": "Medium body",
+      "full": "Full body"
+    },
+    "tasteReasons": {
+      "light-fresh": "A crisp, refreshing choice, just as you asked.",
+      "fruity-easy": "Juicy and easy-going, with no rough edges.",
+      "smooth-round": "Smooth and rounded, gentle on the palate.",
+      "rich-bold": "Rich and full of character, just as you like it.",
+      "sweet": "Pleasantly sweet, a lovely treat.",
+      "surprise": "A hand-picked choice we think you’ll enjoy.",
+      "adjacent": "Close to what you described, with a similar feel."
+    },
+    "foodOne": "It goes well with {food}.",
+    "foodTwo": "It pairs nicely with {food1} and {food2}.",
+    "priceGlass": "At {price} per glass, it fits your budget.",
+    "priceBottle": "At {price} per bottle, it fits your budget.",
+    "slightlyAbove": "Just a touch above your budget at {price}.",
+    "aboveBudget": "Above your budget at {price}, but our closest match.",
+    "fallback": "Nothing fits perfectly, so here are our closest options.",
+    "budgetFallback": "A little above your budget, but worth it for the match.",
+    "helpful": "Was this helpful?",
+    "up": "Yes, helpful",
+    "down": "Not quite",
+    "comment": "What would have made it better?",
+    "send": "Send",
+    "thanks": "Thank you! 🍷",
+    "anonymous": "Feedback is anonymous.",
+    "startOver": "Start over",
+    "suggestions": "Suggestions only — our team is always happy to help.",
+    "disclaimer": "Demo prototype · Wines and prices are fictional.",
+    "privacy": "Privacy",
+    "imprint": "Imprint",
+    "placeholder": "Placeholder – to be completed before any public pilot",
+    "close": "Close",
+    "export": "Export feedback (JSON)",
+    "error": "Something went wrong — start over",
+    "empty": "No demo wines are available. Please start over.",
+    "storageError": "Your feedback could not be saved. Please try again.",
+    "edit": "Change answer",
+    "saveChanges": "Save changes",
+    "cancelEdit": "Cancel changes and return to results",
+    "overBudgetAmount": "{amount} over budget",
+    "noFood": "No food selected"
+  },
+  "de": {
+    "brand": "AI Sommelier",
+    "team": "Ein Prototyp von Team Athens",
+    "demo": "Demo",
+    "restaurant": "Demo Restaurant",
+    "welcomeTitle": "Ein wenig Beratung.\nEin schönes Glas.",
+    "welcome": "Sagen Sie uns, was Ihnen schmeckt, und wir finden in unter einer Minute den passenden Wein von unserer Karte.",
+    "responsible": "Für Gäste im gesetzlichen Mindestalter. Bitte genießen Sie verantwortungsvoll.",
+    "start": "Los geht’s",
+    "chooseLanguage": "Choose your language / Sprache wählen",
+    "english": "English",
+    "german": "Deutsch",
+    "back": "Zurück",
+    "language": "Sprache ändern",
+    "of": "von",
+    "question": "Frage",
+    "tasteTitle": "Worauf haben Sie Lust?",
+    "foodTitle": "Was essen Sie dazu?",
+    "servingTitle": "Wie möchten Sie ihn genießen?",
+    "budgetTitle": "Was passt zu Ihrem Budget?",
+    "tasteHint": "Wählen Sie einfach nach Ihrem Gefühl.",
+    "foodHint": "Die passende Begleitung macht den Unterschied.",
+    "servingHint": "Nur für Sie oder zum Teilen.",
+    "budgetHint": "Ein guter Treffer zu einem angenehmen Preis.",
+    "colourLabel": "Farbpräferenz",
+    "optional": "optional",
+    "noPreference": "Keine Präferenz",
+    "colours": {
+      "red": "Rot",
+      "white": "Weiß",
+      "rose": "Rosé",
+      "sparkling": "Schaumwein"
+    },
+    "tastes": {
+      "light-fresh": [
+        "Leicht & erfrischend",
+        "Spritzig, frisch, leicht zu trinken"
+      ],
+      "fruity-easy": [
+        "Fruchtig & unkompliziert",
+        "Saftig, weich, ohne Ecken und Kanten"
+      ],
+      "smooth-round": [
+        "Samtig & rund",
+        "Sanft, ausgewogen, wohltuend"
+      ],
+      "rich-bold": [
+        "Kräftig & intensiv",
+        "Vollmundig mit Charakter"
+      ],
+      "sweet": [
+        "Ein bisschen süß",
+        "Süß, passt auch zum Dessert"
+      ],
+      "surprise": [
+        "Überrascht mich",
+        "Wir wählen etwas Schönes"
+      ]
+    },
+    "foods": {
+      "fish": "Fisch & Meeresfrüchte",
+      "poultry": "Hähnchen & leichte Gerichte",
+      "red-meat": "Rotes Fleisch",
+      "vegetarian": "Vegetarisch",
+      "pasta-pizza": "Pasta & Pizza",
+      "cheese": "Käse & Vorspeisen",
+      "dessert": "Dessert"
+    },
+    "foodForms": {
+      "fish": "Fisch",
+      "poultry": "Geflügel",
+      "red-meat": "rotem Fleisch",
+      "vegetarian": "vegetarischen Gerichten",
+      "pasta-pizza": "Pasta und Pizza",
+      "cheese": "Käse",
+      "dessert": "Dessert"
+    },
+    "maxFood": "Bis zu zwei auswählen",
+    "continue": "Weiter",
+    "skip": "Überspringen — ich entscheide später",
+    "glass": "Ein Glas",
+    "bottle": "Eine Flasche",
+    "glassSize": "0,2 l",
+    "bottleSize": "0,75 l · ca. 4 Gläser",
+    "budgets": {
+      "glass": {
+        "low": "Bis 6 €",
+        "mid": "6 – 9 €",
+        "high": "Ab 9 €",
+        "any": "Egal"
+      },
+      "bottle": {
+        "low": "Bis 30 €",
+        "mid": "30 – 50 €",
+        "high": "Ab 50 €",
+        "any": "Egal"
+      }
+    },
+    "results": "Ihre Empfehlungen",
+    "resultsHint": "Ein paar schöne Optionen, für Sie ausgewählt.",
+    "best": "Unser Favorit",
+    "alternatives": "Auch einen Versuch wert",
+    "why": "Warum dieser Wein",
+    "perGlass": "pro Glas",
+    "perBottle": "pro Flasche",
+    "bottleOnly": "nur Flasche",
+    "sweetness": {
+      "dry": "Trocken",
+      "off-dry": "Leicht süß",
+      "sweet": "Süß"
+    },
+    "bodies": {
+      "light": "Leicht",
+      "medium": "Mittelkräftig",
+      "full": "Vollmundig"
+    },
+    "tasteReasons": {
+      "light-fresh": "Eine spritzige, erfrischende Wahl, genau wie gewünscht.",
+      "fruity-easy": "Saftig und unkompliziert, ohne Ecken und Kanten.",
+      "smooth-round": "Samtig und rund, mild am Gaumen.",
+      "rich-bold": "Kräftig und voller Charakter, ganz nach Ihrem Geschmack.",
+      "sweet": "Angenehm süß, ein kleiner Genuss.",
+      "surprise": "Eine handverlesene Wahl, die Ihnen gefallen dürfte.",
+      "adjacent": "Nah an Ihrer Beschreibung, mit ähnlichem Charakter."
+    },
+    "foodOne": "Passt gut zu {food}.",
+    "foodTwo": "Passt gut zu {food1} und {food2}.",
+    "priceGlass": "Mit {price} pro Glas passt er in Ihr Budget.",
+    "priceBottle": "Mit {price} pro Flasche passt er in Ihr Budget.",
+    "slightlyAbove": "Mit {price} nur knapp über Ihrem Budget.",
+    "aboveBudget": "Mit {price} über Ihrem Budget, aber unser nächster Treffer.",
+    "fallback": "Nichts passt ganz perfekt, hier sind unsere nächstliegenden Optionen.",
+    "budgetFallback": "Etwas über Ihrem Budget, aber passend zu Ihren Wünschen.",
+    "helpful": "War das hilfreich?",
+    "up": "Ja, hilfreich",
+    "down": "Nicht ganz",
+    "comment": "Was hätte es besser gemacht?",
+    "send": "Senden",
+    "thanks": "Vielen Dank! 🍷",
+    "anonymous": "Das Feedback ist anonym.",
+    "startOver": "Neu starten",
+    "suggestions": "Nur Vorschläge — unser Team berät Sie gerne.",
+    "disclaimer": "Demo-Prototyp · Weine und Preise sind frei erfunden.",
+    "privacy": "Datenschutz",
+    "imprint": "Impressum",
+    "placeholder": "Platzhalter – vor einem öffentlichen Pilotprojekt zu ergänzen",
+    "close": "Schließen",
+    "export": "Feedback exportieren (JSON)",
+    "error": "Etwas ist schiefgelaufen — bitte neu starten",
+    "empty": "Keine Demo-Weine verfügbar. Bitte starten Sie neu.",
+    "storageError": "Ihr Feedback konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+    "edit": "Antwort ändern",
+    "saveChanges": "Änderungen speichern",
+    "cancelEdit": "Änderungen verwerfen und zu den Ergebnissen zurückkehren",
+    "overBudgetAmount": "{amount} über dem Budget",
+    "noFood": "Kein Essen ausgewählt"
+  }
+};
+
+const WINES = [
+  {
+    "id": "w01",
+    "name": "Demo Riesling No. 1",
+    "producer": "Weingut Beispiel",
+    "region": "Mosel",
+    "country": "Germany",
+    "colour": "white",
+    "body": 2,
+    "sweetness": "dry",
+    "acidity": 5,
+    "tannin": 0,
+    "tasteProfiles": [
+      "light-fresh"
+    ],
+    "foodPairings": [
+      "fish",
+      "vegetarian",
+      "poultry"
+    ],
+    "glassPrice": 6.5,
+    "bottlePrice": 32,
+    "isHouseFavourite": true,
+    "flavourNotes": {
+      "en": [
+        "lemon",
+        "green apple",
+        "slate"
+      ],
+      "de": [
+        "Zitrone",
+        "grüner Apfel",
+        "Schiefer"
+      ]
+    },
+    "text": {
+      "en": "Bright and zesty with a clean, mineral finish.",
+      "de": "Lebendig und spritzig mit sauberem, mineralischem Abgang."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w02",
+    "name": "Demo Sauvignon Blanc No. 2",
+    "producer": "Domaine d'Exemple",
+    "region": "Loire",
+    "country": "France",
+    "colour": "white",
+    "body": 2,
+    "sweetness": "dry",
+    "acidity": 5,
+    "tannin": 0,
+    "tasteProfiles": [
+      "light-fresh"
+    ],
+    "foodPairings": [
+      "fish",
+      "vegetarian",
+      "cheese"
+    ],
+    "glassPrice": 7,
+    "bottlePrice": 34,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "grapefruit",
+        "fresh herbs",
+        "lime"
+      ],
+      "de": [
+        "Grapefruit",
+        "frische Kräuter",
+        "Limette"
+      ]
+    },
+    "text": {
+      "en": "Fresh and herbal, wonderfully refreshing.",
+      "de": "Frisch und kräuterig, wunderbar erfrischend."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w03",
+    "name": "Demo Pinot Grigio No. 3",
+    "producer": "Cantina Esempio",
+    "region": "Veneto",
+    "country": "Italy",
+    "colour": "white",
+    "body": 2,
+    "sweetness": "dry",
+    "acidity": 4,
+    "tannin": 0,
+    "tasteProfiles": [
+      "light-fresh",
+      "fruity-easy"
+    ],
+    "foodPairings": [
+      "fish",
+      "pasta-pizza",
+      "poultry"
+    ],
+    "glassPrice": 5.5,
+    "bottlePrice": 26,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "pear",
+        "citrus",
+        "almond"
+      ],
+      "de": [
+        "Birne",
+        "Zitrus",
+        "Mandel"
+      ]
+    },
+    "text": {
+      "en": "Light, simple and very easy to enjoy.",
+      "de": "Leicht, unkompliziert und sehr süffig."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w04",
+    "name": "Demo Chardonnay No. 4",
+    "producer": "Maison Modèle",
+    "region": "Burgundy",
+    "country": "France",
+    "colour": "white",
+    "body": 4,
+    "sweetness": "dry",
+    "acidity": 3,
+    "tannin": 0,
+    "tasteProfiles": [
+      "smooth-round"
+    ],
+    "foodPairings": [
+      "poultry",
+      "cheese",
+      "fish"
+    ],
+    "glassPrice": 9.5,
+    "bottlePrice": 48,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "ripe apple",
+        "butter",
+        "hazelnut"
+      ],
+      "de": [
+        "Reifer Apfel",
+        "Butter",
+        "Haselnuss"
+      ]
+    },
+    "text": {
+      "en": "Creamy and rounded with gentle toasty notes.",
+      "de": "Cremig und rund mit sanften Röstnoten."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w05",
+    "name": "Demo Pinot Noir No. 5",
+    "producer": "Weingut Muster",
+    "region": "Baden",
+    "country": "Germany",
+    "colour": "red",
+    "body": 2,
+    "sweetness": "dry",
+    "acidity": 4,
+    "tannin": 2,
+    "tasteProfiles": [
+      "smooth-round",
+      "fruity-easy"
+    ],
+    "foodPairings": [
+      "poultry",
+      "vegetarian",
+      "pasta-pizza"
+    ],
+    "glassPrice": 8,
+    "bottlePrice": 42,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "red cherry",
+        "raspberry",
+        "soft spice"
+      ],
+      "de": [
+        "Rote Kirsche",
+        "Himbeere",
+        "milde Würze"
+      ]
+    },
+    "text": {
+      "en": "A silky, light red with juicy red fruit.",
+      "de": "Ein seidiger, leichter Rotwein mit saftigen roten Früchten."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w06",
+    "name": "Demo Merlot No. 6",
+    "producer": "Château Probe",
+    "region": "Bordeaux",
+    "country": "France",
+    "colour": "red",
+    "body": 3,
+    "sweetness": "dry",
+    "acidity": 3,
+    "tannin": 3,
+    "tasteProfiles": [
+      "fruity-easy",
+      "smooth-round"
+    ],
+    "foodPairings": [
+      "pasta-pizza",
+      "red-meat",
+      "cheese"
+    ],
+    "glassPrice": 6.5,
+    "bottlePrice": 33,
+    "isHouseFavourite": true,
+    "flavourNotes": {
+      "en": [
+        "plum",
+        "blackberry",
+        "cocoa"
+      ],
+      "de": [
+        "Pflaume",
+        "Brombeere",
+        "Kakao"
+      ]
+    },
+    "text": {
+      "en": "Soft and plummy, a friendly crowd-pleaser.",
+      "de": "Weich und pflaumig, ein freundlicher Allrounder."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w07",
+    "name": "Demo Cabernet No. 7",
+    "producer": "Viña Beispiel",
+    "region": "Maipo Valley",
+    "country": "Chile",
+    "colour": "red",
+    "body": 5,
+    "sweetness": "dry",
+    "acidity": 3,
+    "tannin": 5,
+    "tasteProfiles": [
+      "rich-bold"
+    ],
+    "foodPairings": [
+      "red-meat",
+      "cheese"
+    ],
+    "glassPrice": 9.5,
+    "bottlePrice": 55,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "blackcurrant",
+        "cedar",
+        "pepper"
+      ],
+      "de": [
+        "Schwarze Johannisbeere",
+        "Zedernholz",
+        "Pfeffer"
+      ]
+    },
+    "text": {
+      "en": "Powerful and structured, made for hearty dishes.",
+      "de": "Kraftvoll und strukturiert, ideal zu deftigen Gerichten."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w08",
+    "name": "Demo Tempranillo No. 8",
+    "producer": "Bodega Ejemplo",
+    "region": "Rioja",
+    "country": "Spain",
+    "colour": "red",
+    "body": 4,
+    "sweetness": "dry",
+    "acidity": 3,
+    "tannin": 4,
+    "tasteProfiles": [
+      "rich-bold",
+      "smooth-round"
+    ],
+    "foodPairings": [
+      "red-meat",
+      "pasta-pizza",
+      "cheese"
+    ],
+    "glassPrice": 7.5,
+    "bottlePrice": 38,
+    "isHouseFavourite": true,
+    "flavourNotes": {
+      "en": [
+        "dark cherry",
+        "vanilla",
+        "leather"
+      ],
+      "de": [
+        "Dunkle Kirsche",
+        "Vanille",
+        "Leder"
+      ]
+    },
+    "text": {
+      "en": "Warm and generous with a gentle oaky touch.",
+      "de": "Warm und großzügig mit sanfter Holznote."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w09",
+    "name": "Demo Rosé No. 9",
+    "producer": "Mas Demonstration",
+    "region": "Provence",
+    "country": "France",
+    "colour": "rose",
+    "body": 2,
+    "sweetness": "dry",
+    "acidity": 4,
+    "tannin": 0,
+    "tasteProfiles": [
+      "light-fresh",
+      "fruity-easy"
+    ],
+    "foodPairings": [
+      "fish",
+      "vegetarian",
+      "poultry"
+    ],
+    "glassPrice": 6,
+    "bottlePrice": 31,
+    "isHouseFavourite": true,
+    "flavourNotes": {
+      "en": [
+        "strawberry",
+        "melon",
+        "peach"
+      ],
+      "de": [
+        "Erdbeere",
+        "Melone",
+        "Pfirsich"
+      ]
+    },
+    "text": {
+      "en": "Pale, crisp and perfect for a light meal.",
+      "de": "Hell, knackig und perfekt zu einer leichten Mahlzeit."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w10",
+    "name": "Demo Rosé No. 10",
+    "producer": "Weingut Probierstück",
+    "region": "Pfalz",
+    "country": "Germany",
+    "colour": "rose",
+    "body": 2,
+    "sweetness": "off-dry",
+    "acidity": 3,
+    "tannin": 0,
+    "tasteProfiles": [
+      "fruity-easy"
+    ],
+    "foodPairings": [
+      "vegetarian",
+      "pasta-pizza"
+    ],
+    "glassPrice": 5.5,
+    "bottlePrice": 27,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "wild strawberry",
+        "cherry",
+        "candy floss"
+      ],
+      "de": [
+        "Walderdbeere",
+        "Kirsche",
+        "Zuckerwatte"
+      ]
+    },
+    "text": {
+      "en": "Fruity and softly off-dry, super easy-drinking.",
+      "de": "Fruchtig und leicht halbtrocken, sehr süffig."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w11",
+    "name": "Demo Crémant No. 11",
+    "producer": "Cave Exemple",
+    "region": "Alsace",
+    "country": "France",
+    "colour": "sparkling",
+    "body": 2,
+    "sweetness": "dry",
+    "acidity": 4,
+    "tannin": 0,
+    "tasteProfiles": [
+      "light-fresh"
+    ],
+    "foodPairings": [
+      "fish",
+      "cheese",
+      "vegetarian"
+    ],
+    "glassPrice": 8,
+    "bottlePrice": 40,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "green apple",
+        "brioche",
+        "lemon zest"
+      ],
+      "de": [
+        "Grüner Apfel",
+        "Brioche",
+        "Zitronenzeste"
+      ]
+    },
+    "text": {
+      "en": "Fine bubbles, crisp and festive.",
+      "de": "Feine Perlen, knackig und festlich."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w12",
+    "name": "Demo Prosecco No. 12",
+    "producer": "Cantina Prova",
+    "region": "Veneto",
+    "country": "Italy",
+    "colour": "sparkling",
+    "body": 1,
+    "sweetness": "off-dry",
+    "acidity": 3,
+    "tannin": 0,
+    "tasteProfiles": [
+      "fruity-easy",
+      "light-fresh"
+    ],
+    "foodPairings": [
+      "vegetarian",
+      "cheese",
+      "dessert"
+    ],
+    "glassPrice": 6,
+    "bottlePrice": 29,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "pear",
+        "white peach",
+        "blossom"
+      ],
+      "de": [
+        "Birne",
+        "weißer Pfirsich",
+        "Blüten"
+      ]
+    },
+    "text": {
+      "en": "Light, fruity bubbles, an easy aperitif.",
+      "de": "Leichte, fruchtige Perlen, ein unkomplizierter Aperitif."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w13",
+    "name": "Demo Spätlese No. 13",
+    "producer": "Weingut Beispielhaft",
+    "region": "Rheingau",
+    "country": "Germany",
+    "colour": "white",
+    "body": 2,
+    "sweetness": "sweet",
+    "acidity": 4,
+    "tannin": 0,
+    "tasteProfiles": [
+      "sweet"
+    ],
+    "foodPairings": [
+      "dessert",
+      "cheese"
+    ],
+    "glassPrice": 7.5,
+    "bottlePrice": 38,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "apricot",
+        "honey",
+        "orange peel"
+      ],
+      "de": [
+        "Aprikose",
+        "Honig",
+        "Orangenschale"
+      ]
+    },
+    "text": {
+      "en": "Honeyed and sweet with lively freshness.",
+      "de": "Honigsüß mit lebendiger Frische."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w14",
+    "name": "Demo Moscato No. 14",
+    "producer": "Vigna Modello",
+    "region": "Piedmont",
+    "country": "Italy",
+    "colour": "white",
+    "body": 1,
+    "sweetness": "sweet",
+    "acidity": 3,
+    "tannin": 0,
+    "tasteProfiles": [
+      "sweet",
+      "fruity-easy"
+    ],
+    "foodPairings": [
+      "dessert",
+      "cheese"
+    ],
+    "glassPrice": 5.5,
+    "bottlePrice": 25,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "grape",
+        "peach",
+        "elderflower"
+      ],
+      "de": [
+        "Traube",
+        "Pfirsich",
+        "Holunderblüte"
+      ]
+    },
+    "text": {
+      "en": "Gently sweet and lightly sparkling-fresh.",
+      "de": "Sanft süß und leicht-frisch."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w15",
+    "name": "Demo Nebbiolo No. 15",
+    "producer": "Tenuta Beispiel",
+    "region": "Piedmont",
+    "country": "Italy",
+    "colour": "red",
+    "body": 5,
+    "sweetness": "dry",
+    "acidity": 4,
+    "tannin": 5,
+    "tasteProfiles": [
+      "rich-bold"
+    ],
+    "foodPairings": [
+      "red-meat",
+      "cheese"
+    ],
+    "glassPrice": null,
+    "bottlePrice": 78,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "dried rose",
+        "cherry",
+        "tar"
+      ],
+      "de": [
+        "Getrocknete Rose",
+        "Kirsche",
+        "Teer"
+      ]
+    },
+    "text": {
+      "en": "A serious, long-lived red for special evenings.",
+      "de": "Ein ernsthafter, langlebiger Rotwein für besondere Abende."
+    },
+    "available": true,
+    "demo": true
+  },
+  {
+    "id": "w16",
+    "name": "Demo Brut Réserve No. 16",
+    "producer": "Maison Musterhaus",
+    "region": "Champagne",
+    "country": "France",
+    "colour": "sparkling",
+    "body": 3,
+    "sweetness": "dry",
+    "acidity": 4,
+    "tannin": 0,
+    "tasteProfiles": [
+      "smooth-round",
+      "light-fresh"
+    ],
+    "foodPairings": [
+      "fish",
+      "cheese",
+      "poultry"
+    ],
+    "glassPrice": null,
+    "bottlePrice": 62,
+    "isHouseFavourite": false,
+    "flavourNotes": {
+      "en": [
+        "toasted bread",
+        "pear",
+        "almond"
+      ],
+      "de": [
+        "Toast",
+        "Birne",
+        "Mandel"
+      ]
+    },
+    "text": {
+      "en": "Elegant, creamy bubbles for a celebration.",
+      "de": "Elegante, cremige Perlen für einen besonderen Anlass."
+    },
+    "available": true,
+    "demo": true
+  }
+];
+
+// Lucide SVG geometry (ISC).
+const ICONS = {
+  "arrow-left": [
+    [
+      "path",
+      {
+        "d": "m12 19-7-7 7-7"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M19 12H5"
+      }
+    ]
+  ],
+  "arrow-right": [
+    [
+      "path",
+      {
+        "d": "M5 12h14"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "m12 5 7 7-7 7"
+      }
+    ]
+  ],
+  "check": [
+    [
+      "path",
+      {
+        "d": "M20 6 9 17l-5-5"
+      }
+    ]
+  ],
+  "chevron-right": [
+    [
+      "path",
+      {
+        "d": "m9 18 6-6-6-6"
+      }
+    ]
+  ],
+  "circle-dollar-sign": [
+    [
+      "circle",
+      {
+        "cx": "12",
+        "cy": "12",
+        "r": "10"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M12 18V6"
+      }
+    ]
+  ],
+  "droplets": [
+    [
+      "path",
+      {
+        "d": "M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"
+      }
+    ]
+  ],
+  "grape": [
+    [
+      "path",
+      {
+        "d": "M22 5V2l-5.89 5.89"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": "16.6",
+        "cy": "15.89",
+        "r": "3"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": "8.11",
+        "cy": "7.4",
+        "r": "3"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": "12.35",
+        "cy": "11.65",
+        "r": "3"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": "13.91",
+        "cy": "5.85",
+        "r": "3"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": "18.15",
+        "cy": "10.09",
+        "r": "3"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": "6.56",
+        "cy": "13.2",
+        "r": "3"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": "10.8",
+        "cy": "17.44",
+        "r": "3"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": "5",
+        "cy": "19",
+        "r": "3"
+      }
+    ]
+  ],
+  "heart": [
+    [
+      "path",
+      {
+        "d": "M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"
+      }
+    ]
+  ],
+  "leaf": [
+    [
+      "path",
+      {
+        "d": "M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"
+      }
+    ]
+  ],
+  "sparkles": [
+    [
+      "path",
+      {
+        "d": "M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M20 2v4"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M22 4h-4"
+      }
+    ],
+    [
+      "circle",
+      {
+        "cx": "4",
+        "cy": "20",
+        "r": "2"
+      }
+    ]
+  ],
+  "sun": [
+    [
+      "circle",
+      {
+        "cx": "12",
+        "cy": "12",
+        "r": "4"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M12 2v2"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M12 20v2"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "m4.93 4.93 1.41 1.41"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "m17.66 17.66 1.41 1.41"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M2 12h2"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M20 12h2"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "m6.34 17.66-1.41 1.41"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "m19.07 4.93-1.41 1.41"
+      }
+    ]
+  ],
+  "thumbs-down": [
+    [
+      "path",
+      {
+        "d": "M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M17 14V2"
+      }
+    ]
+  ],
+  "thumbs-up": [
+    [
+      "path",
+      {
+        "d": "M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M7 10v12"
+      }
+    ]
+  ],
+  "utensils": [
+    [
+      "path",
+      {
+        "d": "M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M7 2v20"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"
+      }
+    ]
+  ],
+  "wine": [
+    [
+      "path",
+      {
+        "d": "M8 22h8"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M7 10h10"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M12 15v7"
+      }
+    ],
+    [
+      "path",
+      {
+        "d": "M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"
+      }
+    ]
+  ]
+};
+
+/**
+ * Browser-only recommendation engine, reconstructed from the public demo.
+ * It uses a weighted rule system and does not call an AI service.
+ */
+const ADJACENT_TASTES = {
+  "light-fresh": ["fruity-easy"],
+  "fruity-easy": ["light-fresh", "smooth-round", "sweet"],
+  "smooth-round": ["fruity-easy", "rich-bold"],
+  "rich-bold": ["smooth-round"],
+  sweet: ["fruity-easy"],
+};
+
+function winePrice(wine, answers) {
+  return answers.serving === "glass"
+    ? wine.glassPrice ?? wine.bottlePrice
+    : wine.bottlePrice;
+}
+
+const BUDGET_LIMITS = {
+  glass: { low: 6, mid: 9 },
+  bottle: { low: 30, mid: 50 },
+};
+
+function budgetScore(price, answers) {
+  const { low, mid: middle } = BUDGET_LIMITS[answers.serving === "glass" ? "glass" : "bottle"];
+  if (!answers.budget || answers.budget === "any") {
+    return { points: 20, strict: true };
+  }
+  if (answers.budget === "high") {
+    return { points: price >= middle ? 20 : 12, strict: true };
+  }
+  const ceiling = answers.budget === "low" ? low : middle;
+  if (price <= ceiling) {
+    return {
+      points: answers.budget === "mid" && price <= low ? 12 : 20,
+      strict: true,
+    };
+  }
+  // The original allows a 15% margin before marking a wine over budget.
+  if (Math.round(price * 100) <= Math.round(ceiling * 115)) {
+    return { points: 10, strict: true, note: "slightlyAbove" };
+  }
+  return { points: 0, strict: false, note: "aboveBudget" };
+}
+
+function recommendWines(answers, wines) {
+  const available = wines.filter(
+    (wine) => wine.available &&
+      (answers.serving !== "glass" || wine.glassPrice !== null),
+  );
+  const target = answers.serving === "glass"
+    ? { low: 4.5, mid: 7.5, high: 11, any: 0 }
+    : { low: 25, mid: 40, high: 65, any: 0 };
+
+  function scoreAll(ignoreColour = false, boostAdjacent = false) {
+    return available.map((wine) => {
+      const reasons = [];
+      let taste = 0;
+      if (answers.taste === "surprise") {
+        taste = 20;
+        reasons.push("surprise");
+      } else if (answers.taste && wine.tasteProfiles.includes(answers.taste)) {
+        taste = 40;
+        reasons.push(answers.taste);
+      } else if (answers.taste && wine.tasteProfiles.some(
+        (profile) => ADJACENT_TASTES[answers.taste]?.includes(profile),
+      )) {
+        taste = boostAdjacent ? 40 : 20;
+        reasons.push("adjacent");
+      }
+      const food = answers.foods.some((item) => wine.foodPairings.includes(item)) ? 25 : 0;
+      if (food) reasons.push("food");
+      const budget = budgetScore(winePrice(wine, answers), answers);
+      reasons.push("budget");
+      const colour = ignoreColour || !answers.colourPref
+        ? 5 : wine.colour === answers.colourPref ? 10 : 0;
+      const house = wine.isHouseFavourite ? (answers.taste === "surprise" ? 10 : 5) : 0;
+      if (house) reasons.push("house");
+      const maximum = answers.foods.length ? 100 : 75;
+      return {
+        wine,
+        score: Math.min(100, Math.round((taste + food + budget.points + colour + house) / maximum * 100)),
+        reasons,
+        priceNote: budget.note,
+        rank: "alt",
+      };
+    });
+  }
+
+  function sort(items, preferCheap = false) {
+    return items.sort((left, right) =>
+      right.score - left.score ||
+      (preferCheap
+        ? winePrice(left.wine, answers) - winePrice(right.wine, answers)
+        : answers.budget && answers.budget !== "any"
+          ? Math.abs(winePrice(left.wine, answers) - target[answers.budget]) -
+            Math.abs(winePrice(right.wine, answers) - target[answers.budget])
+          : 0) ||
+      left.wine.id.localeCompare(right.wine.id),
+    );
+  }
+
+  let scored = scoreAll();
+  let selected = sort(scored.filter((item) => item.priceNote !== "aboveBudget"));
+  let budgetFallback = selected.length < 3 && scored.some((item) => item.priceNote === "aboveBudget");
+  if (selected.length < 3) {
+    selected.push(...sort(scored.filter((item) => item.priceNote === "aboveBudget"), true)
+      .slice(0, 3 - selected.length));
+  }
+
+  let relaxed = false;
+  if (selected.length < 3 || (selected[0]?.score ?? 0) < 45) {
+    relaxed = true;
+    scored = scoreAll(true);
+    selected = sort(scored.filter((item) => item.priceNote !== "aboveBudget"));
+    if ((selected[0]?.score ?? 0) < 45) {
+      scored = scoreAll(true, true);
+      selected = sort(scored.filter((item) => item.priceNote !== "aboveBudget"));
+    }
+    if (selected.length < 3) {
+      const overBudget = sort(scored.filter((item) => item.priceNote === "aboveBudget"), true);
+      budgetFallback ||= overBudget.length > 0;
+      selected.push(...overBudget.slice(0, 3 - selected.length));
+    }
+  }
+
+  let results = selected.slice(0, 3);
+  const [first, second, third] = results;
+  // Add colour variety only when a similarly scoring alternative exists.
+  if (first && second && third && results.every((item) => item.wine.colour === first.wine.colour)) {
+    const different = sort(scored.filter((item) =>
+      item.wine.colour !== first.wine.colour &&
+      item.score >= third.score - 10 &&
+      !results.some((result) => result.wine.id === item.wine.id) &&
+      (budgetFallback || item.priceNote !== "aboveBudget"),
+    ))[0];
+    if (different) results = [first, second, different];
+  }
+  return {
+    results: results.map((item, index) => ({ ...item, rank: index === 0 ? "best" : "alt" })),
+    meta: { noExactMatch: budgetFallback || relaxed, budgetOnly: budgetFallback && !relaxed },
+  };
+}
+
+function formatPrice(value, language) {
+  return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-IE", {
+    style: "currency", currency: "EUR",
+  }).format(value);
+}
+
+function interpolate(template, values) {
+  return template.replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "");
+}
+
+/* Readable, dependency-free reconstruction of the published React interface. */
+"use strict";
+
+const SCREENS = ["welcome", "language", "taste", "food", "serving", "budget", "results"];
+const TASTES = ["light-fresh", "fruity-easy", "smooth-round", "rich-bold", "sweet", "surprise"];
+const COLOURS = ["red", "white", "rose", "sparkling"];
+const FOODS = ["fish", "poultry", "red-meat", "vegetarian", "pasta-pizza", "cheese", "dessert"];
+const BUDGETS = ["low", "mid", "high", "any"];
+const TASTE_ICONS = ["droplets", "grape", "heart", "sun", "sparkles", "wine"];
+const SESSION_KEY = "ai-sommelier-session";
+const FEEDBACK_KEY = "ai-sommelier-feedback";
+const root = document.getElementById("app");
+let state = restoreSession();
+let legalModal = null;
+let modalTrigger = null;
+let showFoodLimit = false;
+let feedback = null;
+let lastAdvance = 0;
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[character]);
+}
+
+function icon(name, className = "", size = 24) {
+  const nodes = ICONS[name] || ICONS.wine;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"
+    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round" class="${escapeHTML(className)}" aria-hidden="true">
+    ${nodes.map(([tag, attributes]) => `<${tag} ${Object.entries(attributes)
+      .map(([key, value]) => `${key}="${escapeHTML(value)}"`).join(" ")}></${tag}>`).join("")}
+    </svg>`;
+}
+
+function button(content, action, value = "", className = "ghost", options = {}) {
+  const { pressed, label, disabled = false, focusKey = `${action}:${value}` } = options;
+  return `<button type="button" class="${className}" data-action="${action}"
+    data-value="${escapeHTML(value)}" data-focus="${escapeHTML(focusKey)}"
+    ${pressed === undefined ? "" : `aria-pressed="${pressed}"`}
+    ${label ? `aria-label="${escapeHTML(label)}"` : ""} ${disabled ? "disabled" : ""}>${content}</button>`;
+}
+
+function freshSession(language) {
+  return { screen: "welcome", answers: { language, foods: [], colourPref: null } };
+}
+
+function validAnswers(answers) {
+  return !!answers &&
+    ["en", "de"].includes(answers.language) &&
+    Array.isArray(answers.foods) && answers.foods.length <= 2 &&
+    answers.foods.every((food) => FOODS.includes(food)) &&
+    (!answers.taste || TASTES.includes(answers.taste)) &&
+    (!answers.serving || ["glass", "bottle"].includes(answers.serving)) &&
+    (!answers.budget || BUDGETS.includes(answers.budget)) &&
+    (!answers.colourPref || COLOURS.includes(answers.colourPref));
+}
+
+function validSession(value) {
+  return validAnswers(value?.answers) && SCREENS.includes(value.screen) &&
+    (!value.beforeEdit || (["taste", "food", "serving", "budget"].includes(value.screen) &&
+      validAnswers(value.beforeEdit)));
+}
+
+function restoreSession() {
+  try {
+    const stored = JSON.parse(sessionStorage.getItem(SESSION_KEY));
+    if (validSession(stored)) return stored;
+  } catch { /* A denied or corrupt store must not prevent using the page. */ }
+  return freshSession(navigator.language.toLowerCase().startsWith("de") ? "de" : "en");
+}
+
+function saveSession() {
+  document.documentElement.lang = state.answers.language;
+  try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(state)); } catch { /* Optional. */ }
+}
+
+function readFeedback() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(FEEDBACK_KEY) || "[]");
+    return Array.isArray(saved) ? saved : [];
+  } catch { return []; }
+}
+
+function updateAnswers(patch = {}, nextScreen = state.screen, advancing = false, beforeEdit = state.beforeEdit) {
+  if (advancing && Date.now() - lastAdvance < 300) return;
+  if (advancing) lastAdvance = Date.now();
+  const screenChanged = state.screen !== nextScreen;
+  state = { screen: nextScreen, answers: { ...state.answers, ...patch } };
+  if (beforeEdit && nextScreen !== "results") state.beforeEdit = beforeEdit;
+  if (screenChanged) showFoodLimit = false;
+  saveSession();
+  render(screenChanged);
+}
+
+function choice(title, subtitle, name, action, value, selected) {
+  return button(`<span class="choice-icon">${icon(name)}</span>
+    <span><strong>${escapeHTML(title)}</strong>${subtitle ? `<small>${escapeHTML(subtitle)}</small>` : ""}</span>
+    ${icon("chevron-right", "choice-chevron")}`, action, value, "choice-button", { pressed: selected });
+}
+
+function restaurantLine(t, extraClass = "") {
+  return `<div class="restaurant-line ${extraClass}"><span>${t.restaurant}</span><span class="demo-tag">${t.demo}</span></div>`;
+}
+
+function welcome(t) {
+  return `<main class="welcome screen-enter">
+    ${restaurantLine(t)}
+    <div class="wine-illustration" aria-hidden="true">${icon("wine")}${icon("leaf", "illustration-leaf")}${icon("sparkles", "illustration-spark")}</div>
+    <h1>${escapeHTML(t.welcomeTitle)}</h1><p class="welcome-copy">${t.welcome}</p>
+    <div class="welcome-actions">${button(`${t.start}${icon("arrow-right")}`, "start", "", "sommelier-button")}
+    <p class="responsible">${t.responsible}</p></div>
+    </main>`;
+}
+
+function questionnaire(t) {
+  const a = state.answers;
+  const screen = state.screen;
+  const titles = { language: t.chooseLanguage, taste: t.tasteTitle, food: t.foodTitle,
+    serving: t.servingTitle, budget: t.budgetTitle, results: t.results };
+  const hints = { taste: t.tasteHint, food: t.foodHint, serving: t.servingHint,
+    budget: t.budgetHint, results: t.resultsHint };
+  const step = state.beforeEdit ? 0 : ["taste", "food", "serving", "budget"].indexOf(screen) + 1;
+  const progress = step > 0
+    ? `<div class="progress-row" role="progressbar" aria-label="${t.question}" aria-valuemin="1" aria-valuemax="4" aria-valuenow="${step}">
+        <span>${step} ${t.of} 4</span><div class="progress-dots" aria-hidden="true">${[1, 2, 3, 4]
+          .map((number) => `<span class="${number <= step ? "complete" : ""}"></span>`).join("")}</div></div>`
+    : restaurantLine(t, "mb-7");
+  let content = "";
+  if (screen === "language") {
+    content = `<div class="choice-list mt-8">${["en", "de"].map((language) =>
+      choice(language === "en" ? t.english : t.german, "", a.language === language ? "check" : "wine",
+        "choose-language", language, a.language === language)).join("")}</div>`;
+  } else if (screen === "taste") {
+    content = `<div class="colour-picker"><p>${t.colourLabel} <span>(${t.optional})</span></p>
+      <div class="colour-chips">${button(t.noPreference, "colour", "", "chip-button", { pressed: !a.colourPref })}
+      ${COLOURS.map((colour) => button(`<span class="colour-dot colour-${colour}"></span>${t.colours[colour]}`,
+        "colour", colour, "chip-button", { pressed: a.colourPref === colour })).join("")}</div></div>
+      <div class="choice-list">${TASTES.map((taste, index) => choice(t.tastes[taste][0], t.tastes[taste][1],
+        TASTE_ICONS[index], "taste", taste, a.taste === taste)).join("")}</div>
+      ${state.beforeEdit && a.taste ? `<div class="bottom-actions">${button(t.saveChanges, "save-taste", "", "sommelier-button")}</div>` : ""}`;
+  } else if (screen === "food") {
+    content = `<div class="food-options">${FOODS.map((food) => button(
+      `${a.foods.includes(food) ? icon("check") : ""}${t.foods[food]}`, "food", food, "chip-button",
+      { pressed: a.foods.includes(food) })).join("")}</div>
+      <p class="food-hint" role="status">${showFoodLimit ? t.maxFood : ""}</p>
+      <div class="bottom-actions">${button(`${t.continue}${icon("arrow-right")}`, "continue", "", "sommelier-button", { disabled: !a.foods.length })}
+      ${button(t.skip, "skip-food")}</div>`;
+  } else if (screen === "serving") {
+    content = `<div class="choice-list serving-options">${["glass", "bottle"].map((serving) =>
+      choice(t[serving], serving === "glass" ? t.glassSize : t.bottleSize, "wine", "serving", serving,
+        a.serving === serving)).join("")}</div>`;
+  } else if (screen === "budget") {
+    content = `<div class="choice-list">${BUDGETS.map((budget) => choice(t.budgets[a.serving || "glass"][budget],
+      "", budget === "any" ? "sparkles" : "circle-dollar-sign", "budget", budget, a.budget === budget)).join("")}</div>`;
+  } else if (screen === "results") {
+    content = resultContent(t);
+  }
+  return `<main class="${screen === "results" ? "results-screen" : "question-screen"} screen-enter">
+    ${progress}<h1 id="screen-title" tabindex="-1">${titles[screen]}</h1>
+    ${screen === "language" ? "" : `<p class="screen-hint">${hints[screen]}</p>`}${content}</main>`;
+}
+
+function wineCard(recommendation, t) {
+  const a = state.answers;
+  const wine = recommendation.wine;
+  const amount = winePrice(wine, a);
+  const price = formatPrice(amount, a.language);
+  const overage = recommendation.priceNote
+    ? formatPrice(amount - BUDGET_LIMITS[a.serving === "glass" ? "glass" : "bottle"][a.budget], a.language)
+    : null;
+  const sentences = [];
+  const taste = recommendation.reasons.find((reason) => reason in t.tasteReasons);
+  if (taste) sentences.push(t.tasteReasons[taste]);
+  const [food1, food2] = a.foods.filter((food) => wine.foodPairings.includes(food));
+  if (food1 && !food2) sentences.push(interpolate(t.foodOne, { food: t.foodForms[food1] }));
+  if (food1 && food2) sentences.push(interpolate(t.foodTwo, { food1: t.foodForms[food1], food2: t.foodForms[food2] }));
+  sentences.push(interpolate(recommendation.priceNote ? t[recommendation.priceNote]
+    : a.serving === "glass" ? t.priceGlass : t.priceBottle, { price }));
+  const isBest = recommendation.rank === "best";
+  return `<article class="wine-card ${isBest ? "wine-card-best" : ""}">
+    <div class="flex items-center justify-between gap-2">${isBest
+      ? `<span class="best-badge">${icon("sparkles", "", 14)}${t.best}</span>` : icon("wine", "text-primary", 20)}
+      <span class="demo-tag">${t.demo}</span></div>
+    <h2>${escapeHTML(wine.name)}</h2><p class="producer">${escapeHTML(wine.producer)}</p>
+    <p class="region">${escapeHTML(wine.region)}, ${escapeHTML(wine.country)}</p>
+    <div class="wine-style"><span class="colour-dot colour-${wine.colour}"></span>${t.colours[wine.colour]}
+      <span>·</span>${t.sweetness[wine.sweetness]}<span>·</span>${wine.body <= 2 ? t.bodies.light : wine.body === 3 ? t.bodies.medium : t.bodies.full}</div>
+    <p class="wine-price">${price}<span>${a.serving === "glass" ? t.perGlass : t.perBottle}</span>${wine.glassPrice === null ? `<small>(${t.bottleOnly})</small>` : ""}${overage
+      ? `<span class="budget-badge">${escapeHTML(interpolate(t.overBudgetAmount, { amount: overage }))}</span>` : ""}</p>
+    <div class="wine-explanation"><h3>${t.why}</h3><p>${escapeHTML(sentences.slice(0, 3).join(" "))}</p></div>
+    <div class="flavour-notes">${wine.flavourNotes[a.language].map((note) => `<span>${escapeHTML(note)}</span>`).join("")}</div>
+    </article>`;
+}
+
+function resultContent(t) {
+  const a = state.answers;
+  const recommendations = recommendWines(a, WINES);
+  const serving = a.serving || "glass";
+  const answerButton = (content, target, title) => button(content, "edit", target, "chip-button", { label: `${t.edit}: ${title}` });
+  const chips = `<div class="answer-chips">
+    ${answerButton(`${icon("grape")}${a.taste ? t.tastes[a.taste][0] : t.tasteTitle}`, "taste", t.tasteTitle)}
+    ${a.colourPref ? button(t.colours[a.colourPref], "edit", "taste", "chip-button") : ""}
+    ${answerButton(`${icon("utensils")}${a.foods.length ? a.foods.map((food) => t.foods[food]).join(", ") : t.noFood}`, "food", t.foodTitle)}
+    ${answerButton(`${icon("wine")}${t[serving]}`, "serving", t.servingTitle)}
+    ${answerButton(t.budgets[serving][a.budget || "any"], "budget", t.budgetTitle)}</div>`;
+  const fallback = recommendations.meta.noExactMatch
+    ? `<p class="fallback-note">${recommendations.meta.budgetOnly ? t.budgetFallback : t.fallback}</p>` : "";
+  return `${chips}${fallback}${recommendations.results.length
+    ? recommendations.results.map((recommendation, index) => `${index === 1 ? `<h2 class="alternatives-title">${t.alternatives}</h2>` : ""}${wineCard(recommendation, t)}`).join("")
+    : `<p role="alert">${t.empty}</p>`}
+    <p class="small-text text-center">${t.suggestions}</p>${feedbackContent(recommendations.results.map((item) => item.wine.id), t)}
+    ${button(t.startOver, "reset", "", "outline w-full")}`;
+}
+
+function feedbackContent(ids, t) {
+  const key = JSON.stringify({ ...state.answers, language: undefined, ids });
+  if (feedback?.key !== key) {
+    let id = typeof crypto.randomUUID === "function" ? crypto.randomUUID() : `demo-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    try {
+      const stored = sessionStorage.getItem(`ai-sommelier-result:${key}`);
+      if (stored) id = stored;
+      else sessionStorage.setItem(`ai-sommelier-result:${key}`, id);
+    } catch { /* Keep the in-memory id when storage is denied. */ }
+    feedback = { key, id, ids, rating: null, comment: "", sent: readFeedback().some((item) => item.id === id), error: false };
+  }
+  return `<section class="feedback"><h2>${feedback.sent ? t.thanks : t.helpful}</h2>
+    ${feedback.sent ? "" : `<div class="flex justify-center gap-3">${["up", "down"].map((rating) => button(
+      icon(`thumbs-${rating}`), "rating", rating, "chip-button", { pressed: feedback.rating === rating, label: t[rating] })).join("")}</div>
+      ${feedback.rating ? `<form class="feedback-form" id="feedback-form"><label for="feedback-comment">${t.comment}</label>
+        <input id="feedback-comment" name="comment" value="${escapeHTML(feedback.comment)}" maxlength="200">
+        <button type="submit" class="sommelier-button">${t.send}${icon("arrow-right")}</button></form>` : ""}`}
+    <p class="small-text">${t.anonymous}</p>${feedback.error ? `<p role="alert">${t.storageError}</p>` : ""}</section>`;
+}
+
+function render(focusHeading = false) {
+  const t = I18N[state.answers.language];
+  const focusKey = document.activeElement?.dataset?.focus;
+  const header = state.screen === "welcome"
+    ? `<div class="brand-lockup">${icon("wine")}<div><strong>${t.brand}</strong><small>${t.team}</small></div></div>`
+    : button(icon("arrow-left"), "back", "", "ghost", { label: state.beforeEdit ? t.cancelEdit : t.back });
+  root.innerHTML = `<div class="app-shell"><header class="app-header">${header}
+    <div class="language-toggle" role="group" aria-label="${t.language}">
+      ${button("EN", "language", "en", "ghost", { pressed: state.answers.language === "en", label: t.english })}
+      <span aria-hidden="true">/</span>${button("DE", "language", "de", "ghost", { pressed: state.answers.language === "de", label: t.german })}
+    </div></header>${state.screen === "welcome" ? welcome(t) : questionnaire(t)}
+    <footer class="app-footer"><p>${t.disclaimer}</p><div class="footer-links">
+      ${button(t.privacy, "legal", "privacy")}<span aria-hidden="true">·</span>${button(t.imprint, "legal", "imprint")}</div>
+      ${new URLSearchParams(location.search).get("debug") === "1" ? button(t.export, "export", "", "text-link") : ""}</footer>
+    <span class="sr-only" aria-live="polite">${state.screen === "welcome" ? t.brand : ""}</span>
+    ${legalModal ? `<div class="modal-backdrop" data-action="close-modal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="legal-title">
+      <h2 id="legal-title">${t[legalModal]}</h2><p>${t.placeholder}</p>${button(t.close, "close-modal", "", "sommelier-button")}</div></div>` : ""}</div>`;
+  if (legalModal) {
+    root.querySelector(".modal button").focus();
+  } else if (focusHeading) {
+    root.querySelector("#screen-title")?.focus();
+    window.scrollTo({ top: 0, behavior: "instant" });
+  } else if (focusKey) {
+    Array.from(root.querySelectorAll("[data-focus]")).find((element) => element.dataset.focus === focusKey)?.focus();
+  }
+}
+
+root.addEventListener("click", (event) => {
+  const control = event.target.closest("[data-action]");
+  if (!control || control.disabled) return;
+  const action = control.dataset.action;
+  const value = control.dataset.value;
+  const a = state.answers;
+  switch (action) {
+    case "start": updateAnswers({}, "language", true); break;
+    case "language": updateAnswers({ language: value }); break;
+    case "choose-language": updateAnswers({ language: value }, "taste", true); break;
+    case "colour": updateAnswers({ colourPref: value || null }); break;
+    case "taste": updateAnswers({ taste: value }, state.beforeEdit ? "results" : "food", true); break;
+    case "save-taste": updateAnswers({}, "results", true); break;
+    case "food": {
+      const selected = a.foods.includes(value);
+      if (!selected && a.foods.length >= 2) {
+        showFoodLimit = true;
+        render();
+      } else {
+        showFoodLimit = false;
+        updateAnswers({ foods: selected ? a.foods.filter((item) => item !== value) : [...a.foods, value] });
+      }
+      break;
+    }
+    case "continue": updateAnswers({}, state.beforeEdit ? "results" : "serving", true); break;
+    case "skip-food": updateAnswers({ foods: [] }, state.beforeEdit ? "results" : "serving", true); break;
+    case "serving": {
+      const changed = a.serving && a.serving !== value;
+      const next = state.beforeEdit && !changed ? "results" : "budget";
+      updateAnswers({ serving: value, ...(changed ? { budget: undefined } : {}) }, next, true);
+      break;
+    }
+    case "budget": updateAnswers({ budget: value }, "results", true); break;
+    case "edit":
+      lastAdvance = 0;
+      updateAnswers({}, value, false, a);
+      break;
+    case "back":
+      lastAdvance = 0;
+      if (state.beforeEdit) {
+        updateAnswers({ ...state.beforeEdit, language: a.language }, "results");
+      } else {
+        updateAnswers({}, SCREENS[Math.max(0, SCREENS.indexOf(state.screen) - 1)]);
+      }
+      break;
+    case "reset":
+      try {
+        sessionStorage.removeItem(SESSION_KEY);
+        Object.keys(sessionStorage).filter((key) => key.startsWith("ai-sommelier-result:"))
+          .forEach((key) => sessionStorage.removeItem(key));
+      } catch { /* Optional. */ }
+      state = freshSession(a.language);
+      feedback = null;
+      lastAdvance = 0;
+      saveSession();
+      render(true);
+      break;
+    case "legal":
+      modalTrigger = control.dataset.focus;
+      legalModal = value;
+      render();
+      break;
+    case "close-modal":
+      if (control.classList.contains("modal-backdrop") && event.target !== control) return;
+      closeModal();
+      break;
+    case "rating": feedback.rating = value; render(); break;
+    case "export": exportFeedback(); break;
+  }
+});
+
+root.addEventListener("input", (event) => {
+  if (event.target.id === "feedback-comment" && feedback) feedback.comment = event.target.value.slice(0, 200);
+});
+
+root.addEventListener("submit", (event) => {
+  if (event.target.id !== "feedback-form") return;
+  event.preventDefault();
+  if (!feedback?.rating || feedback.sent) return;
+  try {
+    const saved = readFeedback();
+    if (!saved.some((item) => item.id === feedback.id)) {
+      saved.push({ id: feedback.id, timestamp: new Date().toISOString(), restaurantId: "demo",
+        language: state.answers.language, answers: state.answers, recommendedIds: feedback.ids,
+        rating: feedback.rating, comment: feedback.comment.slice(0, 200) });
+      localStorage.setItem(FEEDBACK_KEY, JSON.stringify(saved));
+    }
+    feedback.sent = true;
+    feedback.error = false;
+  } catch { feedback.error = true; }
+  render();
+});
+
+function closeModal() {
+  legalModal = null;
+  render();
+  Array.from(root.querySelectorAll("[data-focus]")).find((element) => element.dataset.focus === modalTrigger)?.focus();
+}
+
+document.addEventListener("keydown", (event) => {
+  if (!legalModal) return;
+  if (event.key === "Escape") closeModal();
+  if (event.key === "Tab") {
+    event.preventDefault();
+    root.querySelector(".modal button")?.focus();
+  }
+});
+
+function exportFeedback() {
+  const url = URL.createObjectURL(new Blob([JSON.stringify(readFeedback(), null, 2)], { type: "application/json" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "ai-sommelier-feedback.json";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+saveSession();
+render();
+
+    </script>
+  </body>
+</html>
